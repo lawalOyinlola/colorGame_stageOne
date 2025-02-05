@@ -2,7 +2,7 @@
 import { useReducer, useState } from "react";
 import Modal from "./components/Modal";
 import ColorOption from "./components/ColorOption";
-import Overlay from "./components/overlay";
+import Overlay from "./components/Overlay";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import "./App.css";
