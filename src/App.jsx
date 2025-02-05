@@ -102,6 +102,18 @@ function gameReducer(state, action) {
         showConfetti,
       };
     }
+    case "help": {
+      return {
+        ...state,
+        showModal: true,
+      };
+    }
+    case "dismissModal": {
+      return {
+        ...state,
+        showModal: false,
+      };
+    }
     default:
       return state;
   }
@@ -123,6 +135,14 @@ function App() {
     setTimeout(() => setShowFeedback(false), 1000);
   };
 
+  const handleBtnClick = () => {
+    if (state.isGameActive) {
+      dispatch({ type: "dismissModal" });
+    } else {
+      dispatch({ type: "startGame" });
+    }
+  };
+
   const playSound = (isCorrect) => {
     if (!soundEnabled) return;
     const sound = new Audio(isCorrect ? "/correct.m4a" : "/wrong.m4a");
@@ -133,27 +153,27 @@ function App() {
     <main className="app">
       {(state.showModal || state.isGameOver) && (
         <>
-          <Overlay
-            onClose={() => {
-              dispatch({ type: "startGame" });
-            }}
-          />
+          <Overlay onClose={handleBtnClick} />
           <Modal
             title={state.isGameOver ? "Game Over!" : "How to Play"}
             message={
               state.isGameOver
                 ? state.message
-                : "Guess the correct color based on the given target color."
+                : "A target color will be displayed. Select the matching color from the color options given"
             }
             message2={
               state.isGameOver
                 ? `You scored ${state.score}/${state.turns}`
-                : "You have 10 turns to get the highest score possible!"
+                : "You have 10 turns to score as high as possible. Aim for a perfect score! 🎨🔥"
             }
-            buttonText={state.isGameOver ? "Play Again" : "Start Game"}
-            onButtonClick={() => {
-              dispatch({ type: "startGame" });
-            }}
+            buttonText={
+              state.isGameOver
+                ? "Play Again"
+                : state.isGameActive
+                ? "Continue Game"
+                : "Start Game"
+            }
+            onButtonClick={handleBtnClick}
           />
         </>
       )}
@@ -199,20 +219,28 @@ function App() {
 
       {state.isGameActive && (
         <button
-          className="reset-btn"
+          className="cta-btn"
           onClick={() => dispatch({ type: "startGame" })}
           data-testid="newGameButton"
         >
           Reset Game
         </button>
       )}
+      <div className="btns">
+        <button
+          className="helper-btn"
+          onClick={() => dispatch({ type: "help" })}
+        >
+          Help?
+        </button>
 
-      <button
-        className="sound-btn"
-        onClick={() => setSoundEnabled(!soundEnabled)}
-      >
-        {soundEnabled ? "🔊 Sound On" : "🔇 Sound Off"}
-      </button>
+        <button
+          className="helper-btn"
+          onClick={() => setSoundEnabled(!soundEnabled)}
+        >
+          {soundEnabled ? "🔊 Sound On" : "🔇 Sound Off"}
+        </button>
+      </div>
     </main>
   );
 }

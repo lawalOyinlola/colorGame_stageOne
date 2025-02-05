@@ -6,7 +6,7 @@ const Modal = ({ title, message, message2, buttonText, onButtonClick }) => {
       <h2>{title}</h2>
       <p>{message}</p>
       <p>{message2}</p>
-      <button className="start-game-btn" onClick={onButtonClick}>
+      <button className="cta-btn" onClick={onButtonClick}>
         {buttonText}
       </button>
     </div>
